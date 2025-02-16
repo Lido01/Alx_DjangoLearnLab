@@ -1,9 +1,9 @@
 # The commands
 from bookshelf.models import Book
 
-q = Book(title = "1984", author = "George Orwell", publication_year="1949")
+Book.objects.create(title = "1984", author = "George Orwell", publication_year = 1949)
 
-q
+q = Book.objects
 # output  <Book: Book object (None)>
 q.save()
 q
