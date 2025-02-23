@@ -14,12 +14,13 @@ Book.objects.filter(author=author)
 
 
 #Listing the book from library
-library_name1 = Library.objects.create(name="Programming")
+library_name = Library.objects.create(name="Programming")
 library_name2 = Library.objects.create(name="Financial")
 library_name3 = Library.objects.create(name="Business")
 
-li1 = Library.objects.get(name=library_name2)
-li2 = Library.objects.get(name=library_name1)
+
+li1 = Library.objects.get(name=library_name)
+li2 = Library.objects.get(name=library_name3)
 li2.books.all()
 
 # Retrieve the librarian for a library.
