@@ -6,11 +6,11 @@ from django.views.generic import ListView, DeleteView
 #Function Based View
 def list_books(request):
     books = Book.objects.all()
-    return render(request, 'books/list_books.html', {'books': books})
+    return render(request, 'templates/list_books.html', {'books': books})
 
 def list_authors(request):
     authors = Author.objects.all()
-    return render(request, 'authors/list_authors.html', {'authors': authors})
+    return render(request, 'templates/list_authors.html', {'authors': authors})
 
 # Class Based View
 class BookListView(ListView):
