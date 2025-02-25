@@ -38,7 +38,7 @@ class LibraryDetailView(DetailView):
     context_object_name = "library_detail"
 
 #Home page View
-
+"""
 #register View
 class RegisterView(View):
     template_name = 'registration/register.html'
@@ -60,6 +60,27 @@ class RegisterView(View):
             messages.error(request, "Invalid input. Please make sure before submitting to register!")
             form = UserCreationForm()
         return render(request, self.template_name, {"form": form})
+
+"""
+# Function Based registration
+def register(request):
+   # if request.user.is_authenticated:
+   #    return redirect("home") #Prevent logged-in user from again register
+    
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            print("registered succesffuly")
+            login(request, user)
+            messages.error(request, "Registration is successful! You can now login")
+            return redirect('login')
+        else:
+            messages.error(request, "Invalid input, Please make Sure before submit to register!!")
+
+    else:
+        form = UserCreationForm()
+    return render(request, "registration/register.html", {"form": form})
 
 
 
@@ -85,12 +106,39 @@ class LoginView(View):
 
 
 # Function Based View of Login view
- 
+"""
+def LoginView(request):
+    template_name = 'templates/login.html'
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.error(request, "Login is successfully")
+            return redirect("home")
+        else:
+            print("Invalid input")
+            messages.error(request, "Incorrect Input, Please make sure before submit!!")
+    return render(request, "templates/login.html")
+"""
+
+
+"""
+
+def LogoutView(request):
+    logout(request)
+    messages.error(request, "You have been logged out.")
+    redirect('login') # Redirect to login page
+"""
+
 class LogoutView(View):
+    template_name='registration/logout.html'
     def get(self, request):
         logout(request)
         messages.success(request, "You have been logged out.")
-        return redirect('login')
+        # return redirect('login')
+        return render(request, self.template_name)
 
 
 def home(request):
