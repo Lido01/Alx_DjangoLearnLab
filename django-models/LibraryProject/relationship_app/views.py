@@ -16,10 +16,16 @@ from django.views import View
 from django.urls import reverse_lazy
 from django.contrib import messages
 
+
+
+
 #Function Based View
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
+
+
+
 
 def list_authors(request):
     authors = Author.objects.all()
@@ -37,31 +43,6 @@ class LibraryDetailView(DetailView):
     template_name = "relationship_app/library_detail.html"
     context_object_name = "library_detail"
 
-#Home page View
-"""
-#register View
-class RegisterView(View):
-    template_name = 'registration/register.html'
-    success_url = reverse_lazy("login")
-    def get(self, request):
-        form =  UserCreationForm()
-        return render(request, 'registration/register.html', {'form': form})
-    template_name = 'registration/register.html'
-    def  post(self, request):
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-                user =  form.save()
-                user.save()
-                login(request, user)
-                messages.success(request, "Registration is successful! You can now login")
-                return redirect(self.success_url)
-
-        else:
-            messages.error(request, "Invalid input. Please make sure before submitting to register!")
-            form = UserCreationForm()
-        return render(request, self.template_name, {"form": form})
-
-"""
 # Function Based registration
 def register(request):
    # if request.user.is_authenticated:
@@ -103,35 +84,6 @@ class LoginView(View):
         
         return render(request, self.template_name)
 
-
-
-# Function Based View of Login view
-"""
-def LoginView(request):
-    template_name = 'templates/login.html'
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.error(request, "Login is successfully")
-            return redirect("home")
-        else:
-            print("Invalid input")
-            messages.error(request, "Incorrect Input, Please make sure before submit!!")
-    return render(request, "templates/login.html")
-"""
-
-
-"""
-
-def LogoutView(request):
-    logout(request)
-    messages.error(request, "You have been logged out.")
-    redirect('login') # Redirect to login page
-"""
-
 class LogoutView(View):
     template_name='registration/logout.html'
     def get(self, request):
@@ -140,7 +92,12 @@ class LogoutView(View):
         # return redirect('login')
         return render(request, self.template_name)
 
-
 def home(request):
     return render(request, "registration/home.html")
 
+
+from django.contrib.auth.decorators import login_required
+@login_required
+def profile_view(request):
+    # This view can only be accessed by authenticated users
+    return render(request, 'profile.html')
