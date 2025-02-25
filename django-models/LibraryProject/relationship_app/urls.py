@@ -10,7 +10,8 @@ urlpatterns = [
     path('home/list_author/',  list_authors, name=" list_author" ),
     
 
-    path('register/', views.RegisterView.as_view(), name='register'),
-    path('login/',  views.Login.as_view(template_name='templates/login.html'), name='login'),
-    
+    path('register/', views.RegisterView, name='register'),
+    path('login/',  views.LoginView , name='login'),
+    path("home/", views.home, name="home"),
+    path("logout/", views.LogoutView, name="logout")
 ]

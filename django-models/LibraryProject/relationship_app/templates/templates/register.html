@@ -7,12 +7,14 @@
 </head>
 <body>
     <h1>Well come to Register</h1>
-    <form action="/" method="post">
+    <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p}}
         <button type="submit">Register</button>
-        <p>Have an accountt? <a href="login">Login</a> </p>
     </form>
-    
+    <p>Have an accountt? <a href="/login/">Login</a> </p>
+    {% for message in messages %}
+        <div style="color:red;"><h4>{{ message }}</h4></div>
+    {% endfor %}
 </body>
 </html>
