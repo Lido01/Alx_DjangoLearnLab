@@ -38,74 +38,61 @@ class LibraryDetailView(DetailView):
     context_object_name = "library_detail"
 
 #Home page View
-"""
+
 #register View
 class RegisterView(View):
-    template_name = 'templates/register.html'
+    template_name = 'registration/register.html'
     success_url = reverse_lazy("login")
     def get(self, request):
         form =  UserCreationForm()
-        return render(request, 'templates/register.html', {'form': form})
-    template_name = 'templates/register.html'
+        return render(request, 'registration/register.html', {'form': form})
+    template_name = 'registration/register.html'
     def  post(self, request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
                 user =  form.save()
                 user.save()
                 login(request, user)
+                messages.success(request, "Registration is successful! You can now login")
                 return redirect(self.success_url)
+
         else:
+            messages.error(request, "Invalid input. Please make sure before submitting to register!")
             form = UserCreationForm()
         return render(request, self.template_name, {"form": form})
 
-"""
-# Function Based registration
-def  RegisterView(request):
-   # if request.user.is_authenticated:
-   #    return redirect("home") #Prevent logged-in user from again register
-    
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            print("registered succesffuly")
-            login(request, user)
-            messages.error(request, "Registration is successful! You can now login")
-            return redirect('login')
-        else:
-            messages.error(request, "Invalid input, Please make Sure before submit to register!!")
-
-    else:
-        form = UserCreationForm()
-    return render(request, "templates/register.html", {"form": form})
 
 
+class LoginView(View):
+    template_name = 'registration/login.html'
 
+    def get(self, request):
+        return render(request, self.template_name)
 
-
-
-
-# Login view
-def LoginView(request):
-    template_name = 'templates/login.html'
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
+    def post(self, request):
+        username = request.POST.get("username")
+        password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.error(request, "Login is successfully")
+            messages.success(request, "Login is successful")
             return redirect("home")
         else:
-            print("Invalid input")
-            messages.error(request, "Incorrect Input, Please make sure before submit!!")
-    return render(request, "templates/login.html")
+            messages.error(request, "Incorrect input. Please make sure before submitting!")
+        
+        return render(request, self.template_name)
 
 
-def LogoutView(request):
-    logout(request)
-    messages.error(request, "You have been logged out.")
-    redirect('login') # Redirect to login page
+
+# Function Based View of Login view
+ 
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        messages.success(request, "You have been logged out.")
+        return redirect('login')
+
 
 def home(request):
-    return render(request, "templates/home.html")
+    return render(request, "registration/home.html")
+
