@@ -15,32 +15,29 @@ from django.contrib.auth.models import User
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib import messages
-
-
-
+from django.contrib.auth.decorators import permission_required
+from .forms import Bookform
 
 #Function Based View
 def list_books(request):
     books = Book.objects.all()
-    return render(request, 'relationship_app/list_books.html', {'books': books})
-
-
+    return render(request, 'templates/list_books.html', {'books': books})
 
 
 def list_authors(request):
     authors = Author.objects.all()
-    return render(request, "relationship_app/list_authors.html", {'authors': authors})
-    return render(request, "home/register.html", {"form": form})
+    return render(request, "templates/list_authors.html", {'authors': authors})
+    # return render(request, "home/register.html", {"form": form})
 
 # Class Based View
 class BookListView(ListView):
     model = Book
-    template_name = "relationship_app/list_books.html"
+    template_name = "templates/list_books.html"
     context_object_name = "book"
      
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = "relationship_app/library_detail.html"
+    template_name = "templates/library_detail.html"
     context_object_name = "library_detail"
 
 # Function Based registration
@@ -62,8 +59,6 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, "registration/register.html", {"form": form})
-
-
 
 class LoginView(View):
     template_name = 'registration/login.html'
@@ -91,38 +86,43 @@ class LogoutView(View):
         messages.success(request, "You have been logged out.")
         # return redirect('login')
         return render(request, self.template_name)
+    
 
+#@permission_required(login_url= "/login/") checks if user logged or not, return to login
 def home(request):
     return render(request, "registration/home.html")
 
-"""
-from django.contrib.auth.decorators import login_required
-@login_required
-def profile_view(request):
-    # This view can only be accessed by authenticated users
-    return render(request, 'profile.html')"""
+
+#Book Permissions that added
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import permission_required
+
+@permission_required('relationship_app.can_add_book', raise_exception=True)
+def add_book(request):
+    form = Bookform()
+    if request.method == "POST":
+        form = Bookform(request.POST)
+        # title = title.request.POST.get("title")
+        # author = author.request.Post.get("author")
+        if form.is_valid:
+            form.save()
+            return redirect("book_list")
+        else:
+            form = Bookform()
+            """return render(request, "templates/add_book.html", {"error": "Book not added"})"""
+    return render(request, "templates/add_book.html", {"form": form})
 
 
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def change_book(request):
+    if request.method == "POST":
 
-from django.contrib.auth.decorators import user_passes_test
+        title = title.request.POST.get("title")
+        author = author.request.POST.get("author")
+        form = Book.objects.all
 
-def is_admin(user):
-    return user.userprofile.role == 'Admin'
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request):
+    if request.method == "POST":
+        form = Book.objects.get()
 
-def is_librarian(user):
-    return user.userprofile.role == 'Librarian'
-
-def is_member(user):
-    return user.userprofile.role == 'Member'
-
-@user_passes_test(is_admin)
-def admin_view(request):
-    return render(request, 'admin_template.html')
-
-@user_passes_test(is_librarian)
-def librarian_view(request):
-    return render(request, 'librarian_template.html')
-
-@user_passes_test(is_member)
-def member_view(request):
-    return render(request, 'member_template.html')

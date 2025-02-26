@@ -2,12 +2,12 @@ from django.urls import path
 from .views import list_authors, BookListView , LibraryDetailView
 from .views import list_books
 from . import views
-from .views import  LoginView, LogoutView
+from .views import  LoginView, LogoutView, add_book
 
 urlpatterns = [
 
-    path('home/book_list/',  list_books, name="book_list" ),
-    path('home/list_author/',  list_authors, name=" list_author" ),
+    path('list_book/',  list_books, name="book_list" ),
+    path('list_author/',  list_authors, name=" list_author" ),
     
     
     
@@ -16,6 +16,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
 
     path('register/', views.register, name='register'),
+
+    path("book/add/", add_book, name="book_add" ),
 ]
 
 
