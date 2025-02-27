@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf.apps.BookshelfConfig',
     'relationship_app.apps.RelationshipAppConfig',
+    "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
@@ -123,8 +124,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
+#AUTH_USER_MODEL = "accounts.CustomUser"
+AUTH_USER_MODEL= "accounts.CustomUser"
 # Other settings...
 LOGIN_REDIRECT_URL = "home"  # Redirect to 'home' after login
 LOGOUT_REDIRECT_URL = "login"  # Redirect to 'login' after logout

@@ -112,7 +112,6 @@ def add_book(request):
             """return render(request, "templates/add_book.html", {"error": "Book not added"})"""
     return render(request, "templates/add_book.html", {"form": form})
 
-
 @permission_required('relationship_app.can_change_book', raise_exception=True)
 def change_book(request):
     if request.method == "POST":
@@ -125,4 +124,35 @@ def change_book(request):
 def delete_book(request):
     if request.method == "POST":
         form = Book.objects.get()
+
+
+
+
+
+#Added to Admin, Librarian , Member
+ # accounts/views.py
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+from .models import UserProfile
+
+def is_admin(user):
+    return user.is_authenticated and user.userprofile.role == 'Admin'
+
+def is_librarian(user):
+    return user.is_authenticated and user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    return user.is_authenticated and user.userprofile.role == 'Member'
+
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'admin_view.html')
+
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'librarian_view.html')
+
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'member_view.html')
 

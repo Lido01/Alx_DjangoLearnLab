@@ -31,8 +31,8 @@ class Librarian(models.Model):
 
     def __str__(self):
         return self.name
-    
-"""
+
+
 # That I added models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -51,6 +51,8 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
     
+
+
 #Siginal to create or update Userprofile
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -60,4 +62,3 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
-"""
