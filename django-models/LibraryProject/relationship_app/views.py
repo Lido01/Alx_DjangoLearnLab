@@ -58,10 +58,10 @@ def register(request):
 
     else:
         form = UserCreationForm()
-    return render(request, "registration/register.html", {"form": form})
+    return render(request, "relationship_app/register.html", {"form": form})
 
 class LoginView(View):
-    template_name = 'registration/login.html'
+    template_name = 'relationship_app/login.html'
 
     def get(self, request):
         return render(request, self.template_name)
@@ -80,7 +80,7 @@ class LoginView(View):
         return render(request, self.template_name)
 
 class LogoutView(View):
-    template_name='registration/logout.html'
+    template_name='relationship_app/logout.html'
     def get(self, request):
         logout(request)
         messages.success(request, "You have been logged out.")
@@ -90,7 +90,7 @@ class LogoutView(View):
 
 #@permission_required(login_url= "/login/") checks if user logged or not, return to login
 def home(request):
-    return render(request, "registration/home.html")
+    return render(request, "relationship_app/home.html")
 
 
 #Book Permissions that added
