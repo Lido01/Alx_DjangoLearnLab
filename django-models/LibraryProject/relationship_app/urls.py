@@ -2,7 +2,8 @@ from django.urls import path
 from .views import list_authors, BookListView , LibraryDetailView
 from .views import list_books
 from . import views
-from .views import  LoginView, LogoutView, add_book, admin_view, librarian_view,member_view
+from .views import  LoginView, LogoutView, admin_view, librarian_view,member_view
+from .views import add_book, edit_book, delete_book
 
 urlpatterns = [
 
@@ -21,6 +22,10 @@ urlpatterns = [
     path("member/", views.member_view, name="member"),
 
     path("book/add/", add_book, name="book_add" ),
+    path("book/edit/<int:pk>/",edit_book , name="book_edit" ),
+    path("book/delete/<int:pk>/", delete_book, name="book_delete" ),
+
 ]
+
 
 

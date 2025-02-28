@@ -1,4 +1,4 @@
-#class CustomBackend(BaseBackend):
+"""#class CustomBackend(BaseBackend):
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
@@ -28,3 +28,4 @@ class CustomUser(AbstractUser):
     #objects = CustomUserManager()
     USERNAME_FIELD = "email" #assign unique that user must get to login
     REQUIRED_FIELDS = ["username"]
+"""
