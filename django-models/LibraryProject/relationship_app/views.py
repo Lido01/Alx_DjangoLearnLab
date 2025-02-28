@@ -32,12 +32,12 @@ def list_authors(request):
 # Class Based View
 class BookListView(ListView):
     model = Book
-    template_name = "templates/list_books.html"
+    template_name = "relationship_app/list_books.html"
     context_object_name = "book"
      
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = "templates/library_detail.html"
+    template_name = "relationship_app/library_detail.html"
     context_object_name = "library_detail"
 
 # Function Based registration
