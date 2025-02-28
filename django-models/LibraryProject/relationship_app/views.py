@@ -21,12 +21,12 @@ from .forms import Bookform
 #Function Based View
 def list_books(request):
     books = Book.objects.all()
-    return render(request, 'templates/list_books.html', {'books': books})
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 
 
 def list_authors(request):
     authors = Author.objects.all()
-    return render(request, "templates/list_authors.html", {'authors': authors})
+    return render(request, "relationship_app/list_authors.html", {'authors': authors})
     # return render(request, "home/register.html", {"form": form})
 
 # Class Based View
