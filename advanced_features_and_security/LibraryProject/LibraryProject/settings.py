@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    "accounts.apps.AccountsConfig",
+
+    "bookshelf.apps.BookshelfConfig",
     "post.apps.PostConfig",
 ]
 
@@ -125,7 +126,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USE_MODEL = 'accounts.CustomUser'
+AUTH_USE_MODEL = 'bookshelf.CustomUser'
 
 # # Other settings...
 # LOGIN_REDIRECT_URL = "home"  # Redirect to 'home' after login
