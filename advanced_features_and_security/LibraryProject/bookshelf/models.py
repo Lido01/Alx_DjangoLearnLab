@@ -9,6 +9,14 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
 
+
+    class Meta:
+        permissions = [
+            ("can_sell_book", "Can sell book"),
+            ("can_buy_book", "Can buy book"),
+            ("can_publish_book", "Can publish book"),
+        ]
+
 # Create your models here.
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -37,21 +45,3 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
     USERNAME_FIELD = "email" #assign unique that user must get to login
     REQUIRED_FIELDS = ["username"]
-     
-"""
-class MyCustomBackend(BaseBackend):
-    def authenticate(self, request, username=None, password=None):
-        try:
-            user = CustomUser.objects.get(username=username)
-            if user.check_password(password):
-                return user
-        except CustomUser.DoesNotExist:
-            return None
-
-    def get_user(self, user_id):
-        try:
-            return CustomUser.objects.get(pk=user_id)
-        except CustomUser.DoesNotExist:
-            return None
-"""
-
