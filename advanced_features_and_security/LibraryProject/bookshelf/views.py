@@ -13,11 +13,10 @@ def  MyView(request):
     #     redirect(request, "templates/book_list.html")
     return render(request, "templates/index.html", context)
 
-@permission_required('yourapp.can_edit', raise_exception=True)
-def edit_view(request, id):
-    context = {
-        "username": "alx"
-    }
+@permission_required('bookshelf.can_edit', raise_exception=True)
+def edit_view(request):
+    books = Book.objects.all()
+    context = {"books": books}
     return render(request, 'templates/edit_page.html', context)
 
 
