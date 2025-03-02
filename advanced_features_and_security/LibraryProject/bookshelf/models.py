@@ -12,9 +12,10 @@ class Book(models.Model):
 
     class Meta:
         permissions = [
-            ("can_sell_book", "Can sell book"),
-            ("can_buy_book", "Can buy book"),
-            ("can_publish_book", "Can publish book"),
+            ("can_create_book", "Can create book"),
+            ("can_delete_book", "Can delete book"),
+            ("can_view_book", "Can view book"),
+            ("can_change_book", "Can change book"),
         ]
 
 # Create your models here.
