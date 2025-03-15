@@ -7,7 +7,7 @@ class BookSerializer(serializers.ModelSerializer):
         def validate_publication_year(self, data): #Check if the date is valid or not
             print(datetime.date.today().year)
             if data > datetime.date.today().year:
-                raise ValueError(f"The book published year out of the range!!")
+                raise serializers.ValidationError(f"The book published year out of the range!!")
             return data
         class Meta:
             model = Book
