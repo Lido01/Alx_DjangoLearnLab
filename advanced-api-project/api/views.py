@@ -5,7 +5,7 @@ from .models import Author, Book
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import filters
 from django_filters import rest_framework
 
