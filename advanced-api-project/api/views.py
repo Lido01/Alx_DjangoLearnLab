@@ -43,6 +43,8 @@ class UpdateView(generics.UpdateAPIView):
 class DeleteView(generics.DestroyAPIView):
     serializer_class = BookSerializer
     queryset = Book.objects.all()
+    permission_classes = [IsAuthenticated]
+    authentication_classes = SessionAuthentication, BasicAuthentication
 
 
 class AuthorList(generics.ListAPIView):
