@@ -5,7 +5,7 @@ from .models import Author, Book
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import filters
 from django_filters import rest_framework
 
@@ -19,6 +19,7 @@ class ProtecteView(LoginRequiredMixin, View):
 class ListView(generics.ListAPIView):
     serializer_class = BookSerializer
     queryset = Book.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends =  [rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filter_fields =  ["title"]
     search_fields = ["title", "author"]
@@ -29,21 +30,21 @@ class DetailView(generics.RetrieveDestroyAPIView):
     serializer_class = BookSerializer
     queryset = Book.objects.all()
 class CreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = SessionAuthentication, BasicAuthentication
     serializer_class = BookSerializer
     
     # Customize the view by form submissions and data validation
     queryset = Book.objects.all()
 class UpdateView(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = SessionAuthentication, BasicAuthentication
     serializer_class = BookSerializer
     queryset = Book.objects.all()
 class DeleteView(generics.DestroyAPIView):
     serializer_class = BookSerializer
     queryset = Book.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = SessionAuthentication, BasicAuthentication
 
 
