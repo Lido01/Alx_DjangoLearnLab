@@ -1,19 +1,20 @@
 from rest_framework import serializers
 from .models import Book, Author
-import time
+import datetime
 
 #Author Serialization
 class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Book
-        fields = "__all__"
-        def validate(self, data): #Check if the date is valid or not
-            if self.publication_year < "current year":
-                raise ValueError("The book published year out of day(it say future!!)")
+        def validate_publication_year(self, data): #Check if the date is valid or not
+            print(datetime.date.today().year)
+            if data > datetime.date.today().year:
+                raise ValueError(f"The book published year out of the range!!")
             return data
+        class Meta:
+            model = Book
+            fields = "__all__"
 #Nested BookSerializer to serialize the related books dynamically
 class AuthorSerializer(serializers.ModelSerializer):
-    book = BookSerializer(many=True, read_only=True)
+    books = BookSerializer(many=True, read_only=True)
     class Meta:
-        model = Book
-        fields = ["name", "book"]
+        model = Author
+        fields = ["name", "books"]
