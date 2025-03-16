@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .serializers import BookSerializer, AuthorSerializer 
+from .serializers import BookSerializer, AuthorSerializer
 from .models import Author, Book
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
@@ -8,7 +8,6 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import filters
 from django_filters import rest_framework
-
 
 class ProtecteView(LoginRequiredMixin, View):
     login_url = "/login/"# By default is says this but you can cutomize other html file and add in url.py
@@ -49,5 +48,8 @@ class DeleteView(generics.DestroyAPIView):
 
 
 class AuthorList(generics.ListAPIView):
+    serializer_class = AuthorSerializer
+    queryset = Author.objects.all()
+class AuthorCreate(generics.CreateAPIView):
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()
