@@ -5,9 +5,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required 
 from .models import Post
 from rest_framework import generics
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
 from .forms import RegistrationForm, LoginForm
 
-
+#1 User Authentication
 def home(request):
     return render(request, 'blog/index.html')
 def register(request):
@@ -35,14 +37,42 @@ def login(request):
         form = LoginForm()
     return render(request, "login.html", {"form": form})
 
-class PostView(generics.ListAPIView):
-    queryset = Post.objects.all()
+#2 Post CRUD operations
+class ListView(generics.ListAPIView):
+    model = Post
+    template_name = 'post_list.html'  # HTML template
+    context_object_name = 'posts'    # Default variable for the template
 
-class PostCreateView(generics.CreateAPIView):
-    queryset = Post.objects.all()
+class CreateView(LoginRequiredMixin, generics.CreateAPIView):
+    #queryset = Post.objects.all()
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'post_form.html'
 
-class PostUpdateView(generics.UpdateAPIView):
-    queryset = Post.objects.all()
-class PostDeleteView(generics.DestroyAPIView):
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # Set the logged-in user as the author
+        return super().form_valid(form)
+
+ # Detail View: Display a single post
+class DetailView(generics.RetrieveAPIView):
+    model = Post
+    template_name = 'post_detail.html'
     
-    queryset = Post.objects.all()
+class UpdateView(generics.UpdateAPIView):
+    #queryset = Post.objects.all()
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'post_form.html'
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
+ # Delete View: Allow authors to delete their posts
+class DeleteView(LoginRequiredMixin, UserPassesTestMixin, generics.DestroyAPIView):
+    model = Post
+    template_name = 'post_confirm_delete.html'
+    success_url = reverse_lazy('post_list')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
