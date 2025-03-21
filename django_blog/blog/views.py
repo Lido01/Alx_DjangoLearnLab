@@ -7,11 +7,11 @@ from .models import Post
 from rest_framework import generics
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, ProfileForm
 
 #1 User Authentication
 def home(request):
-    return render(request, 'blog/index.html')
+    return render(request, 'blog/home.html')
 def register(request):
     #form = UserCreationForm()
     if request.method=='POST':
@@ -20,11 +20,10 @@ def register(request):
             user = form.save()
             login(request, user)
             return redirect('login')
-       # return render(request, 'templates/blog/home.html')
     else:
         form = RegistrationForm()
         #return redirect('index')
-    return render(request, 'register.html', {'form': form} )
+    return render(request, 'blog/register.html', {'form': form} )
 
 def login(request):
     if request.method =="POST":
@@ -32,12 +31,26 @@ def login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("home")
+            return redirect("profile")
     else:
         form = LoginForm()
-    return render(request, "login.html", {"form": form})
+    return render(request, "blog/login.html", {"form": form})
 
-#2 Post CRUD operations
+
+#2 profile Management
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=request.user)
+    return render(request, 'blog/profile.html', {'form': form})
+
+
+#3 Post CRUD operations
 class ListView(generics.ListAPIView):
     model = Post
     template_name = 'post_list.html'  # HTML template
