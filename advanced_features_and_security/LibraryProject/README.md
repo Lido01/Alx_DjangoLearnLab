@@ -15,7 +15,9 @@ Admins: Has all permissions
 
 
 
+
                 Security Measures Implemented
+
                     Settings
 DEBUG = False:   Disables debug mode in production.
 SECURE_BROWSER_XSS_FILTER:      Activates the browser's XSS filter.
@@ -27,3 +29,7 @@ CSRF_COOKIE_SECURE and SESSION_COOKIE_SECURE: Ensure cookies are sent over HTTPS
 CSRF tokens are included in all form templates to protect against CSRF attacks.
 Data Access Security
 Views use Django’s ORM to avoid SQL injection and handle user inputs safely.
+
+
+
+
