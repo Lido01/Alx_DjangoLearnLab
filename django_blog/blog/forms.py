@@ -3,10 +3,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Post, Comment
 
-class ProfileForm(forms.ModelForm):
+class ProfileForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ["username", "email"]
+        fields = ["username", "email", "password1", "password2"]
         
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -21,13 +21,14 @@ class LoginForm(AuthenticationForm):
 
 class PostForm(forms.ModelForm):
     model = Post
-    fields = ["title", "content"]
+    fields = ["title", "content", "tags"]
     
     def clean_title(self):
         title = self.cleaned_data.get('title')
         if len(title) < 5:
             raise forms.ValidationError("The title must be at least 5 characters long.")
         return title
+    
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment

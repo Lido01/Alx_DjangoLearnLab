@@ -1,5 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    def __str__(self):
+        return self.name
 
 
 # Create your models here.
@@ -8,6 +14,7 @@ class Post(models.Model):
     content = models.TimeField()
     published_date = models.DateField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="post")
+    tags = TaggableManager()
 
 class Comment(models.Model):
     content = models.TextField()
@@ -20,3 +27,4 @@ class Comment(models.Model):
         return f"{self.author} - {self.post.title}"
 
 
+ 

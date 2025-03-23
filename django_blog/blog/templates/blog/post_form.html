@@ -1,9 +1,13 @@
 <!-- Used for both creating and updating posts. --> 
+{% extends "blog/base.html" %}
+{% block content %}
+
 <h2>{{ view.action }} Post</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save</button>
 </form>
-<a href="{% url 'post-list' %}">Cancel</a>
+<a href="{% url 'post_list' %}">Cancel</a>
 
+{% endblock %}

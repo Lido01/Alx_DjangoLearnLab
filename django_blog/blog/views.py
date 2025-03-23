@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 from .forms import RegistrationForm, LoginForm, ProfileForm, CommentForm
 
 #1 User Authentication
+#@login_required
 def home(request):
     return render(request, 'blog/home.html')
 def register(request):
@@ -38,7 +39,7 @@ def login(request):
     return render(request, "blog/login.html", {"form": form})
 
 #2 profile Management
-@login_required
+#@login_required
 def profile(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, instance=request.user)
@@ -47,19 +48,19 @@ def profile(request):
             return redirect('profile')
     else:
         form = ProfileForm(instance=request.user)
-    return render(request, 'blog/profile.html', {'form': form})
+    return render(request, 'blog/profile.html', {'form':form})
 
 
 #3 Post CRUD operations
 class PostListView(generic.ListView):
     model = Post
-    template_name = 'post_list.html'  # HTML template
+    template_name = 'blog/post_list.html'  # HTML template
     context_object_name = 'posts'  # Allows you to refer to the list of posts in the template using . 
 
 class PostCreateView(generic.CreateView):
     model = Post
     fields = ['title', 'content']
-    template_name = 'post_form.html'
+    template_name = 'blog/post_form.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user  # Assign the logged-in user as the author

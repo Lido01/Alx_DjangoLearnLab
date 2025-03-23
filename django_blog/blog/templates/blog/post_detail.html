@@ -1,3 +1,6 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
 <h2>{{ post.title }}</h2>
 <p>{{ post.content }}</p>
 <p><strong>Author:</strong> {{ post.author }}</p>
@@ -12,4 +15,7 @@
 {% empty %}
     <p>No comments yet. Be the first to comment!</p>
 {% endfor %}
-<a href="add_comment">Add Comment</a>
+<a href="comment_create">Add Comment</a>
+<a href="{% url 'post_list' %}">Back</a>
+
+{% endblock %}
