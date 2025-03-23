@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 #from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required 
 from .models import Post, Comment
-from rest_framework import generics
+#from rest_framework import generics
+from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .forms import RegistrationForm, LoginForm, ProfileForm, CommentForm
@@ -36,7 +37,6 @@ def login(request):
         form = LoginForm()
     return render(request, "blog/login.html", {"form": form})
 
-
 #2 profile Management
 @login_required
 def profile(request):
@@ -51,27 +51,30 @@ def profile(request):
 
 
 #3 Post CRUD operations
-class ListView(generics.ListAPIView):
+class PostListView(generic.ListView):
     model = Post
     template_name = 'post_list.html'  # HTML template
-    context_object_name = 'posts'    # Default variable for the template
+    context_object_name = 'posts'  # Allows you to refer to the list of posts in the template using . 
 
-class CreateView(LoginRequiredMixin, generics.CreateAPIView):
-    #queryset = Post.objects.all()
+class PostCreateView(generic.CreateView):
     model = Post
     fields = ['title', 'content']
     template_name = 'post_form.html'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user  # Set the logged-in user as the author
+        form.instance.author = self.request.user  # Assign the logged-in user as the author
         return super().form_valid(form)
+    def get_success_url(self):
+        return reverse_lazy('post_list')  # Redirect to the list of posts after creation
+
 
  # Detail View: Display a single post
-class DetailView(generics.RetrieveAPIView):
+class PostDetailView(generic.DetailView):
     model = Post
-    template_name = 'post_detail.html'
-    
-class UpdateView(generics.UpdateAPIView):
+    template_name = 'blog/post_detail.html'
+    context_object_name = "post" # Refers to the individual post in the template.
+     
+class PostUpdateView(generic.UpdateView):
     #queryset = Post.objects.all()
     model = Post
     fields = ['title', 'content']
@@ -80,28 +83,43 @@ class UpdateView(generics.UpdateAPIView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+    def get_success_url(self):
+        return reverse_lazy('post_list')  # Redirect after updating
+
  # Delete View: Allow authors to delete their posts
-class DeleteView(LoginRequiredMixin, UserPassesTestMixin, generics.DestroyAPIView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = Post
-    template_name = 'post_confirm_delete.html'
+    template_name = 'blog/post_confirm_delete.html'
     success_url = reverse_lazy('post_list')
 
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
-    
+    def get_success_url(self):
+        return reverse_lazy('post_list')  # Redirect after deletion
+
+
 # Comment Views
-@login_required
-def add_comment(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            return redirect('post_list', pk=post.id)
-    else:
-        form = CommentForm()
-    return render(request, 'comment/add_comment.html', {'form': form})
+class CommentCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def form_valid(self, form):
+        form.instance.post = Post.objects.get(pk=self.kwargs['post_id'])
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['post_id']})
+
+class CommentUpdateView(generic.UpdateView):
+    model = Comment
+    template_name = "blog/comment/comment_update.html"
+    fields = ["content"]
+
+class CommentDeleteView(generic.DeleteView):
+    model = Comment
+    template_name = ["blog/comment/comment_delete_confirmation.html"]
+    fields = ["content"]
+
+

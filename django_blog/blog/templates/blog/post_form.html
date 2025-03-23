@@ -1,8 +1,9 @@
-<!-- Used for both creating and updating posts. -->
-<h1>{{ view.object.title|default:"Create New Post" }}</h1>
+<!-- Used for both creating and updating posts. --> 
+<h2>{{ view.action }} Post</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save</button>
 </form>
 <a href="{% url 'post-list' %}">Cancel</a>
+

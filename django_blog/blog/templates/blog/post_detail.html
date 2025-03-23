@@ -1,6 +1,15 @@
-<h1>{{ object.title }}</h1>
-<p>{{ object.content }}</p>
-<p>By {{ object.author }} on {{ object.created_at }}</p>
-<a href="{% url 'post-edit' object.pk %}">Edit</a> |
-<a href="{% url 'post-delete' object.pk %}">Delete</a>
-<a href="{% url 'post-list' %}">Back to List</a>
+<h2>{{ post.title }}</h2>
+<p>{{ post.content }}</p>
+<p><strong>Author:</strong> {{ post.author }}</p>
+<p><strong>Created:</strong> {{ post.created_at }}</p>
+
+<h3>Comments</h3>
+{% for comment in post.comments.all %}
+    <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
+    <small>{{ comment.created_at }}</small>
+    <a href="{% url 'comment_update' pk=comment.pk %}">Edit</a>
+    <a href="{% url 'comment_delete' pk=comment.pk %}">Delete</a>
+{% empty %}
+    <p>No comments yet. Be the first to comment!</p>
+{% endfor %}
+<a href="add_comment">Add Comment</a>
