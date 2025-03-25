@@ -56,8 +56,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'django_blog.urls'
 
-LOGIN_REDIRECT_URL = "/accounts/profile"
+#LOGIN_REDIRECT_URL = "/accounts/profile"
 LOGOUT_REDIRECT_URL = "/accounts/profile"
+LOGIN_REDIRECT_URL = 'home'  # Redirect to the home page
+
 
 
 TEMPLATES = [

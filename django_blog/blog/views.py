@@ -150,21 +150,21 @@ class SearchView(generic.ListView):
             Q(tags__name__icontains=query)
         ).distinct()
 
-class PostsByTagView(generic.ListView):
+class PostByTagListView(generic.ListView):
     model = Post
-    template_name = 'posts_by_tag.html'
+    template_name = 'blog/posts_by_tag.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
         # Retrieve the tag name from the URL pattern
-        tag_name = self.kwargs.get('tag_name')
+        tag_slag = self.kwargs.get('tag_slag')
         # Fetch the tag object (or 404 if it doesn't exist)
-        tag = get_object_or_404(Tag, name=tag_name)
+        tag = get_object_or_404(Tag, name=tag_slag)
         # Filter posts associated with the specified tag
         return Post.objects.filter(tags=tag)
     
     def get_context_data(self, **kwargs):
         # Add additional context to the template (e.g., the tag name)
         context = super().get_context_data(**kwargs)
-        context['tag_name'] = self.kwargs.get('tag_name')
+        context['tag_slag'] = self.kwargs.get('tag_slag')
         return context
