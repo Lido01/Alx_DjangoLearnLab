@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import (
-        register,home, login,
+        HomeView, register, login,
         PostListView, PostDetailView,
         PostCreateView, PostUpdateView,
         PostDeleteView, profile,
@@ -10,7 +10,7 @@ from .views import (
         )
 
 urlpatterns = (
-    path("home/", home, name="home"),
+    path("home/", HomeView.as_view(), name="home"),
     path("profile/", profile, name="profile"),
     path("register/", register, name="register"),
     path("login/", login, name="login"),

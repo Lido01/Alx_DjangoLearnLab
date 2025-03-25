@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Post, Comment
-
+from taggit.forms import TagField, TagWidget
 class ProfileForm(UserCreationForm):
     class Meta:
         model = User
@@ -20,9 +20,10 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
 class PostForm(forms.ModelForm):
-    model = Post
-    fields = ["title", "content", "tags"]
-    
+    tags = TagField(widget=TagWidget())
+    class Meta: 
+        model = Post
+        fields = ["title", "content", "tags"]
     def clean_title(self):
         title = self.cleaned_data.get('title')
         if len(title) < 5:

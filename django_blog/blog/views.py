@@ -9,13 +9,25 @@ from taggit.models import Tag
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from .forms import RegistrationForm, LoginForm, ProfileForm, CommentForm
+from .forms import RegistrationForm, LoginForm, ProfileForm, CommentForm, PostForm
 from django.db.models import Q
+from django.views.generic import TemplateView
+from django.contrib import messages
+
 
 #1 User Authentication
 #@login_required
-def home(request):
-    return render(request, 'blog/home.html')
+# def home(request):
+#     return render(request, 'blog/home.html')
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = "blog/home.html"
+    login_url = "login" # URL where unauthenticated users are redirected
+    
+    # Override the no-permission handler to add an error message
+    def handle_no_permission(self):
+        messages.error(self.request, "You must log in to access the home page.")
+        return super().handle_no_permission()
+
 def register(request):
     #form = UserCreationForm()
     if request.method=='POST':
@@ -61,13 +73,13 @@ class PostListView(generic.ListView):
 
 class PostCreateView(generic.CreateView):
     model = Post
-    fields = ['title', 'content']
+    form_class = PostForm
     template_name = 'blog/post_form.html'
-
     def form_valid(self, form):
         form.instance.author = self.request.user  # Assign the logged-in user as the author
         return super().form_valid(form)
     def get_success_url(self):
+        print("Redirecting to post_list...")
         return reverse_lazy('post_list')  # Redirect to the list of posts after creation
 
 
