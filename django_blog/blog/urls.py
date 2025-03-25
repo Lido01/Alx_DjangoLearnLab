@@ -5,7 +5,8 @@ from .views import (
         PostCreateView, PostUpdateView,
         PostDeleteView, profile,
         CommentCreateView, CommentUpdateView,
-        CommentDeleteView,
+        CommentDeleteView, SearchView,
+        PostsByTagView,
         )
 
 urlpatterns = (
@@ -18,18 +19,23 @@ urlpatterns = (
     #urls for the post CRUD operation
     path('post/', PostListView.as_view(), name='post_list'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
-    path('post/<int:pk>/comments/new/', PostCreateView.as_view(), name='post_create'),
+    #path('post/<int:pk>/comments/new/', PostCreateView.as_view(), name='post_create'),
+    path('post/comments/new/', PostCreateView.as_view(), name='post_create'),
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
 
 
     #urls for the Comment CRUD operation
     path('post/<int:post_id>/comment/create/', CommentCreateView.as_view(), name='comment_create'),
-    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment_update'),
-    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
+    path('post/comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment_update'),
+    path('post/comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
 
+    #Search Result show url
+    path("post/search/", SearchView.as_view(), name="search" ),
+    path('tags/<str:tag_name>/', PostsByTagView.as_view(), name='posts_by_tag'),
+    
+     
 
 )
-
 
 #def login(request):

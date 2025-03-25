@@ -11,17 +11,17 @@
     <header>
         <nav>
             <ul>
-                <!-- <li>Home</li>
-                <li>Post</li>
-                <li>Login</li>
-                <li>Register</li> -->
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'post_list' %}">Blog Posts</a></li>
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register' %}">Register</a></li>
                 <li><a href="{% url 'profile' %}">Profile</a></li>
+                <form action=" " method="get" class="search-form">
+                    <input type="search" name="searched" placeholder="Search..." required>
+                    <button type="submit">Search</button>
+                </form>
             </ul>
- 
+             
         </nav>
     </header>
 
