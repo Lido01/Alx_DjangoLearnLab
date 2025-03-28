@@ -36,8 +36,4 @@ class LoginView(generics.CreateAPIView):
         else:
             return Response({"detail": "Invalid Credentials, Insert correct input"}, status=HTTP_401_UNAUTHORIZED)
 
-class PostViewSet(ViewSet):
-    def get(self):
-        pass
-    def post(self):
-        pass
+ 
