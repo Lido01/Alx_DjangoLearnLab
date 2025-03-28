@@ -1,4 +1,4 @@
-from .models import CustomUser, Post,Comment
+from .models import CustomUser
 from rest_framework import serializers
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -6,22 +6,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ["username", "email"]
 
-
-
-# class RegisterSerializer(serializers.ModelSerializer):
-#     password = serializers.CharField(write_only=True)
-#     class Meta:
-#         model = CustomUser
-#         fields = ["id", "username", "email", "password", "bio"]
-#     def create(self, validated_data):
-#         user = CustomUser.objects.create_user(username=validated_data["username"], email=validated_data["email"], password=validated_data["password"])
-#         return user
-    
-
-
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
-
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -43,19 +29,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         Token.objects.create(user=user)
         return user
 
-
-
-
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)
-class PosrSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = ["title", "content"]
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ["content"]
-
     
