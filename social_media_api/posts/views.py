@@ -39,3 +39,36 @@ class FeedView(generics.GenericAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+from .models import Post, Like
+from django.shortcuts import get_object_or_404
+from notifications.models import Notification
+
+class LikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        # Prevent duplicate likes
+        if Like.objects.filter(user=request.user, post=post).exists():
+            return Response({'message': 'Already liked'}, status=400)
+        Like.objects.create(user=request.user, post=post)
+        # Create notification for the post owner
+        Notification.objects.create(
+            recipient=post.user,
+            actor=request.user,
+            verb="liked your post",
+            target=post
+        )
+        return Response({'message': 'Post liked'}, status=200)
+
+class UnlikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        like = Like.objects.filter(user=request.user, post=post).first()
+        if like:
+            like.delete()
+            return Response({'message': 'Post unliked'}, status=200)
+        return Response({'message': 'You have not liked this post'}, status=400)
