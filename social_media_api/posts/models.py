@@ -17,3 +17,10 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # User who liked the post
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")  # Post being liked
+    timestamp = models.DateTimeField(auto_now_add=True)  # When the like happened
+
+    def __str__(self):
+        return f"{self.user} likes {self.post.title}"
