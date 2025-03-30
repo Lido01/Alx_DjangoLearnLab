@@ -24,12 +24,17 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Post
 from .serializers import PostSerializer
 from rest_framework import status
+from rest_framework import generics
 
-class FeedView(APIView):
+class FeedView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
 
-    def get(self, request):
-        followed_users = request.user.following.all()
-        posts = Post.objects.filter(user__in=followed_users).order_by('-created_at')
-        serializer = PostSerializer(posts, many=True)
+    def get_queryset(self):
+        followed_users = self.request.user.following.all()
+        return Post.objects.filter(user__in=followed_users).order_by('-created_at')
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
