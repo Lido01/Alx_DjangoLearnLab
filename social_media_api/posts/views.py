@@ -20,14 +20,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 #Feed Function View
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from .models import Post
 from .serializers import PostSerializer
 from rest_framework import status
 from rest_framework import generics
 
 class FeedView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostSerializer
 
     def get_queryset(self):
