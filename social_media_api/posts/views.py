@@ -16,6 +16,8 @@ from .models import Post, Like
 from django.shortcuts import get_object_or_404
 from notifications.models import Notification
 
+
+
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializers
@@ -24,6 +26,8 @@ class PostViewSet(viewsets.ModelViewSet):
     def like(request, pk):
         post = Post.objects.get(pk=pk)
         like_post = Like.objects.get_or_create(user=request.user, post=post)
+
+        
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -36,7 +40,8 @@ class FeedView(generics.GenericAPIView):
 
     def get_queryset(self):
         followed_users = self.request.user.following.all()
-        filtering = Post.objects.filter(user__in = followed_users).order_by('-created_at')
+        filtering = Post.objects.filter(authur__in = followed_users).order_by('-created_at')
+        # Post.objects.filter(author__in=following_users).order_by
         return filtering
 
     def get(self, request, *args, **kwargs):
@@ -53,6 +58,9 @@ class LikePostView(APIView):
         if Like.objects.filter(user=request.user, post=post).exists():
             return Response({'message': 'Already liked'}, status=400)
         Like.objects.create(user=request.user, post=post)
+
+    
+
         # Create notification for the post owner
         Notification.objects.create(
             recipient=post.user,
@@ -65,7 +73,7 @@ class LikePostView(APIView):
 class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         like = Like.objects.filter(user=request.user, post=post).first()
         if like:
             like.delete()
