@@ -12,11 +12,15 @@ User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-
+    user =  serializers.CharField()
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'bio', 'password']
+        fields = ['id', "user", 'username', 'email', 'bio', 'password']
 
+    def get(self):
+        user = get_user_model().objects.create_user
+        return user
+    
     def create(self, validated_data):
         # Create a new user with a hashed password
         user = User.objects.create_user(
