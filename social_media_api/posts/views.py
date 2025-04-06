@@ -3,20 +3,6 @@ from rest_framework import viewsets
 from .models import Post , Comment
 from .serializers import PostSerializers, CommentSerializer
 
-
-class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializers
-
-    # def get(self):
-    #     pass
-    # def post(self):
-    #     pass
-
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-
 #Feed Function View
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -26,23 +12,31 @@ from .serializers import PostSerializer
 from rest_framework import status
 from rest_framework import generics
 
+from .models import Post, Like
+from django.shortcuts import get_object_or_404
+from notifications.models import Notification
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializers
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
 class FeedView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostSerializer
-
+    
     def get_queryset(self):
         followed_users = self.request.user.following.all()
-        filtering = Post.objects.filter(user__in=followed_users).order_by('-created_at')
+        filtering = Post.objects.filter(user__in = followed_users).order_by('-created_at')
         return filtering
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-from .models import Post, Like
-from django.shortcuts import get_object_or_404
-from notifications.models import Notification
 
 class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -64,7 +58,6 @@ class LikePostView(APIView):
 
 class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         like = Like.objects.filter(user=request.user, post=post).first()
@@ -72,3 +65,4 @@ class UnlikePostView(APIView):
             like.delete()
             return Response({'message': 'Post unliked'}, status=200)
         return Response({'message': 'You have not liked this post'}, status=400)
+    
